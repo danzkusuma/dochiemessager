@@ -42,14 +42,18 @@ public final class R {
         public static final int iconic=0x7f020008;
         public static final int line2=0x7f020009;
         public static final int list_selector=0x7f02000a;
-        public static final int navigation_refresh=0x7f02000b;
-        public static final int panjang1=0x7f02000c;
-        public static final int panjang2=0x7f02000d;
-        public static final int shape=0x7f02000e;
-        public static final int shape2=0x7f02000f;
-        public static final int social_add_group=0x7f020010;
-        public static final int social_group=0x7f020011;
-        public static final int social_send_now=0x7f020012;
+        public static final int mail_receive=0x7f02000b;
+        public static final int navigation_refresh=0x7f02000c;
+        public static final int notif_email=0x7f02000d;
+        public static final int notif_unread=0x7f02000e;
+        public static final int notify=0x7f02000f;
+        public static final int panjang1=0x7f020010;
+        public static final int panjang2=0x7f020011;
+        public static final int shape=0x7f020012;
+        public static final int shape2=0x7f020013;
+        public static final int social_add_group=0x7f020014;
+        public static final int social_group=0x7f020015;
+        public static final int social_send_now=0x7f020016;
     }
     public static final class id {
         public static final int ImageView02=0x7f0a0003;

@@ -14,8 +14,13 @@ import core.messager.dochie.bean.pesan_dochie;
 import core.messager.dochie.bean.user_dochie;
 import core.messager.dochie.helper.DochieJASONHelper;
 import core.messager.dochie.helper.DochieJavaMailHelper;
+import core.messager.dochie.helper.DochieMailIdleHelper;
 import core.messager.dochie.model.mpesan_dochie;
+import core.messager.dochie.model.muser_dochie;
+import core.messager.dochie.service.DochieServiceImapIdle;
+import core.messager.dochie.service.DochieServiceNetwork;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,8 +38,8 @@ public class pesan_dochie_activity extends Activity {
 	private mpesan_dochie modelPesan;
 	private EditText txtPesan;
 	private ImageButton btnImage;
-	
-	private DochieJASONHelper jsonString;
+
+//	private DochieJASONHelper jsonString;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +73,8 @@ public class pesan_dochie_activity extends Activity {
 		// } catch (Exception e) {
 		// e.printStackTrace();
 		// }
+		startService(new Intent(this, DochieServiceImapIdle.class));
+		
 	}
 
 	// adapter List
@@ -87,6 +94,7 @@ public class pesan_dochie_activity extends Activity {
 			String ambilData = txtPesan.getText().toString();
 			String currentDateTimeString = DateFormat.getDateTimeInstance()
 					.format(new Date());
+
 			adapter_pesan.add(modelPesan.createMessage(1, ambilData, null,
 					currentDateTimeString, 1, 1, 0));
 
@@ -100,24 +108,22 @@ public class pesan_dochie_activity extends Activity {
 	}
 
 	private class kirimEmail extends AsyncTask<String, Integer, String> {
-	
+
 		@Override
 		protected String doInBackground(String... params) {
-			
-			for (int i = 0; i < params.length; i++) {
-				Log.i("info param "+i, params[i]);
-			}
-			
 			try {
-				DochieJavaMailHelper sender = new DochieJavaMailHelper("johan@labitumm.org", "password");
+				DochieJavaMailHelper sender = new DochieJavaMailHelper(
+						"johan@labitumm.org", "password");
 				sender.sendMail(params[0], params[1], params[2], params[3]);
 				Log.e("Email", "process sending");
 			} catch (Exception ex) {
-				String err = (ex.getMessage()==null)?"SD Card failed":ex.getMessage();
-				Log.e("sdcard-err2:",err,ex);
+				String err = (ex.getMessage() == null) ? "SD Card failed" : ex
+						.getMessage();
+				Log.e("sdcard-err2:", err, ex);
 			}
 			return null;
 		}
-
 	}
+
+	
 }

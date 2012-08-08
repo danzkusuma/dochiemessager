@@ -33,7 +33,23 @@ public class muser_dochie {
 	public void close() {
 		dbHelper.close();
 	}
-
+	public String getIdUser(String _nohpUsr) {
+		String _idUsr = "";
+		String sql = "SELECT * FROM "
+				+ DochieSQLiteHelper.TABLE_USER + " WHERE "
+				+ DochieSQLiteHelper.COLOMN_NOHPUSER + " = '" + _nohpUsr+"'";
+		
+		Cursor c = dbUser.rawQuery(sql, null);
+		c.moveToFirst();
+		while (!c.isAfterLast()) {
+			Log.i("id user", c.getString(0));
+			_idUsr = c.getString(0);
+			break;
+		}
+		
+		c.close();
+		return _idUsr;
+	}
 	public user_dochie createMessage(String _namaUsr, String _emailUsr,
 			String _nohpUsr, String _sinUsr, int _isdochie) {
 		

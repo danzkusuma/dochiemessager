@@ -10,20 +10,18 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import core.messager.dochie.bean.pesan_dochie;
+import core.messager.dochie.helper.DochieJavaMailHelper;
 import core.messager.dochie.helper.DochieSQLiteHelper;
 
 public class mpesan_dochie {
 	private SQLiteDatabase dbPesan;
 	private DochieSQLiteHelper dbHelper;
-	private String allcolomns[] = {
-			DochieSQLiteHelper.COLOMN_IDPESAN,
+	private String allcolomns[] = { DochieSQLiteHelper.COLOMN_IDPESAN,
 			DochieSQLiteHelper.COLOMN_IDUSER,
 			DochieSQLiteHelper.COLOMN_ISIPESAN,
 			DochieSQLiteHelper.COLOMN_FILEPESAN,
 			DochieSQLiteHelper.COLOMN_TIMEPESAN,
-			DochieSQLiteHelper.COLOMN_ISSEND,
-			DochieSQLiteHelper.COLOMN_ISME
-	};
+			DochieSQLiteHelper.COLOMN_ISSEND, DochieSQLiteHelper.COLOMN_ISME };
 
 	public mpesan_dochie(Context context) {
 		dbHelper = new DochieSQLiteHelper(context);
@@ -37,8 +35,26 @@ public class mpesan_dochie {
 		dbHelper.close();
 	}
 
+	public String getIdUser(String _nohpUsr) {
+		String _idUsr = "";
+		String sql = "SELECT * FROM "
+				+ DochieSQLiteHelper.TABLE_USER + " WHERE "
+				+ DochieSQLiteHelper.COLOMN_NOHPUSER + " = " + _nohpUsr+ " limit 1" ;
+		Cursor c = dbPesan.rawQuery(sql, null);
+		
+		c.moveToFirst();
+		while (!c.isAfterLast()) {
+			System.out.print(c.getString(0));
+			c.moveToNext();
+		}
+		c.close();
+		
+		return _idUsr;
+	}
+
 	public pesan_dochie createMessage(long _idUsr, String _isiPsn,
-			String _filePsn, String _timePsn, int _isSend, int _isMe,long _idGrb) {
+			String _filePsn, String _timePsn, int _isSend, int _isMe,
+			long _idGrb) {
 		ContentValues values = new ContentValues();
 		values.put(DochieSQLiteHelper.COLOMN_IDUSER, _idUsr);
 		values.put(DochieSQLiteHelper.COLOMN_ISIPESAN, _isiPsn);
@@ -47,7 +63,7 @@ public class mpesan_dochie {
 		values.put(DochieSQLiteHelper.COLOMN_ISSEND, _isSend);
 		values.put(DochieSQLiteHelper.COLOMN_ISME, _isMe);
 		values.put(DochieSQLiteHelper.COLOMN_IDGROUP, _idGrb);
-		
+
 		long insertId = dbPesan.insert(DochieSQLiteHelper.TABLE_PESAN, null,
 				values);
 		Cursor cursor = dbPesan.query(DochieSQLiteHelper.TABLE_PESAN,
@@ -60,7 +76,8 @@ public class mpesan_dochie {
 	}
 
 	public int updateMessage(long _idPsn, long _idUsr, String _isiPsn,
-			String _filePsn, String _timePsn, int _isSend, int _isMe,long _idGrb) {
+			String _filePsn, String _timePsn, int _isSend, int _isMe,
+			long _idGrb) {
 		ContentValues values = new ContentValues();
 		values.put(DochieSQLiteHelper.COLOMN_IDUSER, _idUsr);
 		values.put(DochieSQLiteHelper.COLOMN_ISIPESAN, _isiPsn);
@@ -69,10 +86,9 @@ public class mpesan_dochie {
 		values.put(DochieSQLiteHelper.COLOMN_ISSEND, _isSend);
 		values.put(DochieSQLiteHelper.COLOMN_ISME, _isMe);
 		values.put(DochieSQLiteHelper.COLOMN_IDGROUP, _idGrb);
-		
+
 		int updateID = dbPesan.update(DochieSQLiteHelper.TABLE_PESAN, values,
-				DochieSQLiteHelper.COLOMN_IDPESAN + " = " + _idPsn
-				, null);
+				DochieSQLiteHelper.COLOMN_IDPESAN + " = " + _idPsn, null);
 		return updateID;
 
 	}
@@ -87,11 +103,11 @@ public class mpesan_dochie {
 	public List<pesan_dochie> getAllMessage(long _idUsr) {
 		List<pesan_dochie> pesans = new ArrayList<pesan_dochie>();
 		String sql = "SELECT * FROM PESAN";
-		Cursor cursor = dbPesan.query(DochieSQLiteHelper.TABLE_PESAN, allcolomns,
-				DochieSQLiteHelper.COLOMN_IDGROUP+" = "+0 +" and "+
-				DochieSQLiteHelper.COLOMN_IDUSER+" = "+_idUsr
-				, null, null, null, null);
-//		Cursor cursor = dbPesan.rawQuery(sql,null);
+		Cursor cursor = dbPesan.query(DochieSQLiteHelper.TABLE_PESAN,
+				allcolomns, DochieSQLiteHelper.COLOMN_IDGROUP + " = " + 0
+						+ " and " + DochieSQLiteHelper.COLOMN_IDUSER + " = "
+						+ _idUsr, null, null, null, null);
+		// Cursor cursor = dbPesan.rawQuery(sql,null);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			pesan_dochie pesan = cursorToMessage(cursor);
@@ -101,11 +117,13 @@ public class mpesan_dochie {
 		cursor.close();
 		return pesans;
 	}
+
 	public List<pesan_dochie> getAllMessageGroub(long _idGrb) {
 		List<pesan_dochie> pesans = new ArrayList<pesan_dochie>();
 
-		Cursor cursor = dbPesan.query(DochieSQLiteHelper.TABLE_PESAN, allcolomns,
-				DochieSQLiteHelper.COLOMN_IDGROUP+" = "+_idGrb, null, null, null, null);
+		Cursor cursor = dbPesan.query(DochieSQLiteHelper.TABLE_PESAN,
+				allcolomns, DochieSQLiteHelper.COLOMN_IDGROUP + " = " + _idGrb,
+				null, null, null, null);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			pesan_dochie pesan = cursorToMessageGroup(cursor);
@@ -127,6 +145,7 @@ public class mpesan_dochie {
 		_message.set_isMe(cursor.getInt(6));
 		return _message;
 	}
+
 	private pesan_dochie cursorToMessageGroup(Cursor cursor) {
 		pesan_dochie _message = new pesan_dochie();
 		_message.set_idPsn(cursor.getLong(0));

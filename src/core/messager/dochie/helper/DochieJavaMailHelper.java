@@ -3,7 +3,6 @@ package core.messager.dochie.helper;
 	import javax.activation.DataHandler;   
 import javax.activation.DataSource;   
 import javax.mail.Message;   
-import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;   
 import javax.mail.Session;   
 import javax.mail.Transport;   
@@ -20,7 +19,9 @@ import java.security.Security;
 import java.util.Properties;   
 
 	public class DochieJavaMailHelper extends javax.mail.Authenticator {   
-	    private String mailhost = "192.168.1.101";   
+	    public static String mailhost = "labitumm.org";
+	    public static int portServer = 25;
+	    public static int portServerimap = 143;
 	    private String user;   
 	    private String password;   
 	    private Session session;   
@@ -64,7 +65,7 @@ import java.util.Properties;
 	            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));   
 	        Transport.send(message);   
 	        }catch(Exception e){
-	        	Log.e("kirim pesan", e.getMessage());
+	        	Log.e("kirim pesan"+DochieJavaMailHelper.class, e.getMessage());
 	        }
 	    }   
 
